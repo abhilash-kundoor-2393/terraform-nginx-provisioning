@@ -82,3 +82,17 @@ resource "aws_key_pair" "login_key" {
   key_name   = "login-key"
   public_key = file("~/.ssh/id_rsa.pub")
 }
+
+resource "aws_instance" "nginx_server" {
+  depends_on                  = [aws_vpc.main, aws_security_group.allow_http]
+  ami                         = data.aws_ami.latest_amazon_linux.id
+  instance_type               = var.instance_type
+  subnet_id                   = aws_subnet.public_subnet[0].id
+  associate_public_ip_address = true
+  key_name                    = aws_key_pair.login_key.key_name
+  vpc_security_group_ids      = [aws_security_group.allow_http.id]
+
+  tags = {
+    Name = "nginx-server"
+  }
+}
