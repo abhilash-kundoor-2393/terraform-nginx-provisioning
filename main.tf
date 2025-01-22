@@ -51,3 +51,9 @@ resource "aws_route_table" "internet_access_route_table" {
     Name = "internet-access-route-table"
   }
 }
+
+resource "aws_route_table_association" "route_table_association" {
+  count          = length(aws_subnet.public_subnet)
+  subnet_id      = aws_subnet.public_subnet[count.index].id
+  route_table_id = aws_route_table.internet_access_route_table.id
+}
