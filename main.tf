@@ -38,3 +38,16 @@ resource "aws_internet_gateway_attachment" "internet_gateway_attachment" {
   internet_gateway_id = aws_internet_gateway.internet_gateway.id
   vpc_id              = aws_vpc.main.id
 }
+
+resource "aws_route_table" "internet_access_route_table" {
+  vpc_id = aws_vpc.main.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.internet_gateway.id
+  }
+
+  tags = {
+    Name = "internet-access-route-table"
+  }
+}
