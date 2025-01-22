@@ -21,3 +21,21 @@ variable "private_subnet_cidr" {
   type        = list(string)
   default     = ["10.0.3.0/24", "10.0.4.0/24", "10.0.5.0/24"]
 }
+
+variable "ingress_rules" {
+  description = "List of ingress rules"
+  type = list(object({
+    from_port   = number
+    to_port     = number
+    protocol    = string
+    cidr_blocks = list(string)
+  }))
+  default = [
+    {
+      from_port   = 80
+      to_port     = 80
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  ]
+}

@@ -57,3 +57,23 @@ resource "aws_route_table_association" "route_table_association" {
   subnet_id      = aws_subnet.public_subnet[count.index].id
   route_table_id = aws_route_table.internet_access_route_table.id
 }
+
+resource "aws_security_group" "allow_http" {
+  name   = "allow_http"
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "allow_http"
+  }
+}
+
+resource "aws_security_group_rule" "ingress_rule" {
+  for_each = tomap({ for index, rule in var.ingress_rules : index => rule })
+
+  type              = "ingress"
+  from_port         = each.value.from_port
+  to_port           = each.value.to_port
+  protocol          = each.value.protocol
+  cidr_blocks       = each.value.cidr_blocks
+  security_group_id = aws_security_group.allow_http.id
+}
