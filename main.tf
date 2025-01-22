@@ -77,3 +77,8 @@ resource "aws_security_group_rule" "ingress_rule" {
   cidr_blocks       = each.value.cidr_blocks
   security_group_id = aws_security_group.allow_http.id
 }
+
+resource "aws_key_pair" "login_key" {
+  key_name   = "login-key"
+  public_key = file("~/.ssh/id_rsa.pub")
+}
