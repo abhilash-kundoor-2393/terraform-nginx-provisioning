@@ -27,3 +27,14 @@ resource "aws_subnet" "private_subnet" {
     Name = "private-subnet-${count.index + 1}"
   }
 }
+
+resource "aws_internet_gateway" "internet_gateway" {
+  tags = {
+    Name = "internet-gateway"
+  }
+}
+
+resource "aws_internet_gateway_attachment" "internet_gateway_attachment" {
+  internet_gateway_id = aws_internet_gateway.internet_gateway.id
+  vpc_id              = aws_vpc.main.id
+}
